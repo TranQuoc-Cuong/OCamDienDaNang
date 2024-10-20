@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ổ Điện Đa Năng</title>
+</head>
+<body>
+  <h1>Ổ Điện Đa Năng</h1>
+
+  <p>Điện áp: <span id="voltage"></span> V</p> 
+  <p>Dòng điện: <span id="current"></span> A</p>
+  <p>Công suất: <span id="power"></span> W</p>
+
+  <button id="toggleButton" onclick="toggleLED()">Bật/Tắt</button> </br>
+  <p>Trạng thái nút nhấn: <span id="buttonState"></span></p>
+
+  <a href="/history">Xem lịch sử</a>
+
+  <script>
+    function updateData() {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          var data = JSON.parse(this.responseText);
+          document.getElementById("voltage").innerHTML = data.voltage;
+          document.getElementById("current").innerHTML = data.current;
+          document.getElementById("power").innerHTML = data.power;
+          document.getElementById("buttonState").innerHTML = data.ledState; 
+        }
+      };
+      xhttp.open("GET", "/data", true); 
+      xhttp.send();
+    }
+
+    setInterval(updateData, 1000);
+
+    function toggleLED() {
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", "/toggle_led", true); 
+      xhttp.send(); 
+    }
+  </script>
+</body>
+</html>
